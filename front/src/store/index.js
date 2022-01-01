@@ -32,9 +32,21 @@ export default new Vuex.Store({
       if (existsAtIndex !== -1) {
         state.indexes[existsAtIndex].rank = payload.rank;
       }
+    },
+    addPairToTheList(state,pair) {
+      state.indexes.push(pair)
+    },
+    removePairFromList(state,index) {
+      state.indexes.splice(index,1)
     }
   },
   actions: {
+    removePair(context,index) {
+      context.commit('removePairFromList', index)
+    },
+    addPair(context,pair) {
+      context.commit('addPairToTheList', pair)
+    }
   },
   getters: {
     getIndexes(state) {

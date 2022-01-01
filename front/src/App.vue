@@ -9,14 +9,7 @@
       </div>
 
       <v-spacer></v-spacer>
-
-      <v-btn
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Settings</span>
-        <v-icon>mdi-wrench</v-icon>
-      </v-btn>
+      <settings-dialog></settings-dialog>
     </v-app-bar>
 
     <v-main>
@@ -29,11 +22,13 @@
 
 <script>
 import IndexList from "./components/Main/IndexList";
+import SettingsDialog from "./components/Settings/SettingsDialog";
 export default {
   name: 'App',
 
   components: {
-    IndexList
+    IndexList,
+    SettingsDialog
   },
 
 };

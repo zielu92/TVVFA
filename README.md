@@ -11,7 +11,7 @@ I want to extend this dashboard by adding few features:
 ## How it works
 The dashboard will sort pairs depend on the score. Scores are calculated by checking difference between buys and sells, then the highest scored pair should be displayed as first.
 
-##How to run project using docker
+## How to run project using docker
 ````bash
 docker-compose up -d
 ````
