@@ -1,0 +1,22 @@
+version: '3'
+services:
+  tv-server:
+    build:
+      context: ./back-tv
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    container_name: back-tv
+    volumes:
+      - ./back-tv:/usr/src/app/back-tv
+      - /usr/src/app/back-tv
+  vue-ui:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: vue-ui
+    volumes:
+      - ./front:/usr/src/app/front
+      - /usr/src/app/front/node_modules
