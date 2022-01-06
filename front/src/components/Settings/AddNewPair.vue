@@ -53,6 +53,9 @@
           </v-btn>
         </v-col>
       </v-row>
+      <v-row class="ml-4">
+        List of the supported indexes <a href="https://tvdb.brianthe.dev" target="_blank">tvdb.brianthe.dev</a>
+      </v-row>
   </v-form>
 </template>
 

@@ -174,16 +174,16 @@ export default {
     async fetchData() {
       this.polling = setInterval(async () => {
         this.getData();
-      }, 20000);
+      }, 40000);
     },
     async getData() {
       const response = await fetch(
-          `${process.env.VUE_APP_API_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}`,
+          `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}`,
           {
             method: 'GET',
           }
       );
-      console.log(response);
+      // console.log(response);
       const responseData = await response.json();
       if (!response.ok) {
         throw new Error(response.message || "failed to fetch!");

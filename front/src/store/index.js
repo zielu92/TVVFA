@@ -5,26 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    indexes: [{
-        'pair':'BNBBUSD',
-        'rank': 0,
-        'screener': 'CRYPTO',
-        'exchange': 'BINANCE',
-        'interval': '1m'
-      },
-      {'pair':'ADABUSD',
-        'rank': 0,
-        'screener': 'CRYPTO',
-        'exchange': 'BINANCE',
-        'interval': '1m'
-      },
-      {'pair':'TRYUSD',
-        'rank': 0,
-        'screener': 'forex',
-        'exchange': 'FX_IDC',
-        'interval': '1m'
-      },
-    ],
+    indexes: [],
   },
   mutations: {
     updateRank(state,payload) {
@@ -36,17 +17,53 @@ export default new Vuex.Store({
     addPairToTheList(state,pair) {
       state.indexes.push(pair)
     },
-    removePairFromList(state,index) {
-      state.indexes.splice(index,1)
+    addPairToAPI(state,pair) {
+      var request = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({'pair':pair})
+      };
+      fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/pair`, request);
+    },
+
+    removePairFromList(state,id) {
+      var index = state.indexes.map(i => {
+        return i.id;
+      }).indexOf(id);
+      state.indexes.splice(index, 1);
+    },
+
+    removePairFromAPI(state, id) {
+      var request = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({'index_id':id})
+      };
+      fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/pair`, request);
+    },
+
+    async initApi(state) {
+      console.log("init...")
+      const response = await fetch(
+          `${process.env.VUE_APP_API_ENDPOINT}/api/pairs`,
+          {
+            method: 'GET',
+          }
+      );
+      const responseData = await response.json();
+      state.indexes.push(...responseData);
     }
+
   },
   actions: {
-    removePair(context,index) {
-      context.commit('removePairFromList', index)
+    removePair(context,id) {
+      context.commit('removePairFromList', id)
+      context.commit('removePairFromAPI', id)
     },
     addPair(context,pair) {
       context.commit('addPairToTheList', pair)
-    }
+      context.commit('addPairToAPI', pair)
+    },
   },
   getters: {
     getIndexes(state) {

@@ -19,7 +19,7 @@
               <v-list-item-action-text v-text="item.interval"></v-list-item-action-text>
               <v-icon
                   color="red darken-3"
-                  @click="remove(index)"
+                  @click="remove(item.id)"
               >
                 mdi-delete
               </v-icon>
@@ -42,8 +42,8 @@ export default {
     pairs: [],
   }),
   methods: {
-    remove(index) {
-      this.$store.dispatch('removePair', index);
+    remove(id) {
+      this.$store.dispatch('removePair', id);
     },
   },
   created() {

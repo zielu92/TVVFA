@@ -25,11 +25,12 @@ import IndexList from "./components/Main/IndexList";
 import SettingsDialog from "./components/Settings/SettingsDialog";
 export default {
   name: 'App',
-
   components: {
     IndexList,
     SettingsDialog
   },
-
+  beforeMount() {
+    this.$store.commit('initApi');
+  }
 };
 </script>

@@ -9,7 +9,6 @@ services:
     container_name: back-tv
     volumes:
       - ./back-tv:/usr/src/app/back-tv
-      - /usr/src/app/back-tv
   vue-ui:
     build:
       context: ./front
@@ -19,4 +18,12 @@ services:
     container_name: vue-ui
     volumes:
       - ./front:/usr/src/app/front
-      - /usr/src/app/front/node_modules
+  api:
+    build:
+      context: ./back-api
+      dockerfile: Dockerfile
+    ports:
+      - "3088:3088"
+    container_name: back-api
+    volumes:
+      - ./back-api:/usr/src/app/back-api
