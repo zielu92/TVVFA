@@ -38,7 +38,7 @@ app.get('/api/pairs', (req, res) => {
             console.log(err);
         }
         else{
-            indexes.push(...data);
+            indexes = data;
             res.json(indexes);
         }
     });
