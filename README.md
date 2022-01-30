@@ -4,8 +4,8 @@ This is a dashboard for few tools like Tradingview, which is supported by [pytho
 I want to extend this dashboard by adding few features:
 - [x] Docckerise project
 - [x] Create settings to set pairs
-- [ ] Store setting using redis or mongoDB
-- [ ] Forecasts based on SVM or LSTM price prediction
+- [x] Store setting using redis or mongoDB
+- [ ] Forecasts based on SVM or LSTM or ARIMA/SARIMA price prediction
 - [ ] Add alerts/notification 
 
 ## How it works
