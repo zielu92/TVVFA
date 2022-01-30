@@ -19,7 +19,7 @@
               <v-list-item-action-text v-text="item.interval"></v-list-item-action-text>
               <v-icon
                   color="red darken-3"
-                  @click="remove(item.id)"
+                  @click="remove(item._id)"
               >
                 mdi-delete
               </v-icon>

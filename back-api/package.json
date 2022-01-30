@@ -11,6 +11,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.4",
+    "mongoose": "^5.1.6",
     "random-id": "^1.0.4"
   },
   "devDependencies": {

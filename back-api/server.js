@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const randomId = require('random-id');
+var mongoose = require('mongoose');
+var router = express.Router();
+var PairSchema = require('./models/PairSchema');
 var cors = require('cors');
 const app = express(),
     bodyParser = require("body-parser");
@@ -8,53 +11,70 @@ port = 3088;
 
 app.use(cors());
 
-const indexes = [
-    {
-        'id': 'a1',
-        'pair':'BNBBUSD',
-        'rank': 0,
-        'screener': 'CRYPTO',
-        'exchange': 'BINANCE',
-        'interval': '1m'
-    },
-    {
-        'id': 'a2',
-        'pair':'ADABUSD',
-        'rank': 0,
-        'screener': 'CRYPTO',
-        'exchange': 'BINANCE',
-        'interval': '1m'
-    },
-    {
-        'id': 'a3',
-        'pair':'TRYUSD',
-        'rank': 0,
-        'screener': 'forex',
-        'exchange': 'FX_IDC',
-        'interval': '1m'
-    },
-];
+var query = 'mongodb://root:6nGDVJsEr69A6Len'
+    + '@mongodb:27017/tvvf?'
+    + 'retryWrites=true&w=majority'
+
+const db = (query);
+mongoose.Promise = global.Promise;
+
+mongoose.connect(db, { useNewUrlParser : true,
+    useUnifiedTopology: true }, function(error) {
+    if (error) {
+        console.log("Error!" + error);
+    }
+});
+
+module.exports = router;
+
+let indexes = [];
 
 app.use(bodyParser.json());
 
 app.get('/api/pairs', (req, res) => {
-    res.json(indexes);
+    PairSchema.find(function(err, data) {
+        if(err){
+            res.json({ 'message':'Error: '+err,'success':false});
+            console.log(err);
+        }
+        else{
+            indexes.push(...data);
+            res.json(indexes);
+        }
+    });
 });
 
 app.post('/api/pair', (req, res) => {
     var pair = req.body.pair;
-    pair.id = randomId(10);
-    indexes.push(pair);
-    res.json({ 'message':'pair has been addedd','success':true});
+    var newPair = new PairSchema(pair);
+    newPair.save(function(err, pair) {
+        if(err) {
+            res.json({ 'message':'Error: '+err,'success':false});
+            console.log(err);
+        }
+        else {
+            res.json({ 'message':'Pair has been addedd','success':true});
+            indexes.push(pair)
+        }
+    });
 });
 
 app.delete('/api/pair', (req, res) => {
     var id = req.body.index_id;
-    var index = indexes.map(i => {
-        return i.id;
-    }).indexOf(id);
-    indexes.splice(index, 1);
-    res.json({ 'message':'pair has been deleted','success':true});
+    PairSchema.remove({_id:id},
+        function(err, data) {
+            if(err){
+                res.json({ 'message':'Error: '+err,'success':false});
+                console.log(err);
+            }
+            else{
+                var index = indexes.map(i => {
+                    return i.id;
+                }).indexOf(id);
+                indexes.splice(index, 1);
+                res.json({ 'message':'pair has been deleted','success':true});
+            }
+        });
 });
 
 app.get('/', (req,res) => {

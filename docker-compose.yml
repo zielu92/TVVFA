@@ -27,3 +27,15 @@ services:
     container_name: back-api
     volumes:
       - ./back-api:/usr/src/app/back-api
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 6nGDVJsEr69A6Len
+      MONGO_INITDB_DATABASE: tvvf
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
