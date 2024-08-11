@@ -75,6 +75,14 @@ export default {
       rankNumber: this.$store.getters.getRankSound
     }
   },
+  watch: {
+    '$store.getters.getRankSound': function(newRankSound) {
+      this.rankNumber = newRankSound;
+    }
+  },
+  created() {
+    this.rankNumber = this.$store.getters.getRankSound;
+  },
   methods: {
     setSound() {
       this.$store.dispatch('toggleSound');

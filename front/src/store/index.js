@@ -46,6 +46,7 @@ export default new Vuex.Store({
 
     async initApi(state) {
       console.log("init...")
+      //pairs
       const response = await fetch(
           `${process.env.VUE_APP_API_ENDPOINT}/api/pairs`,
           {
@@ -54,14 +55,45 @@ export default new Vuex.Store({
       );
       const responseData = await response.json();
       state.indexes.push(...responseData);
+
+      //settings 
+      const getSettings = await fetch(
+        `${process.env.VUE_APP_API_ENDPOINT}/api/setting/all`,
+        {
+          method: 'GET',
+        }
+      );
+      const responseSettingsData = await getSettings.json();
+      if (responseSettingsData.success) {
+          const settings = responseSettingsData.data;
+          settings.forEach(setting => {
+              if (setting.key === 'sound') {
+                  state.sound = setting.value === 'true'; 
+              }
+              if (setting.key === 'rankSound') {
+                  state.rankSound = parseInt(setting.value, 10);  
+              }
+          });
+      }
     },
 
+    
     saveSoundSetting(state) {
       state.sound = !state.sound;
+      fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/setting`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: 'sound', value: state.sound }),
+      });
     },
 
     setRankSound(state, rank) {
-      state.rankSound = rank
+      state.rankSound = rank;
+      fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/setting`, {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: 'rankSound', value: rank }),
+      });
     }
 
   },

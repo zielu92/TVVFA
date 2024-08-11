@@ -5,9 +5,9 @@ var mongoose = require('mongoose');
 var router = express.Router();
 var PairSchema = require('./models/PairSchema');
 var cors = require('cors');
-const SettingSchema = require('./models/SettingSchema');
-const app = express(),
-    bodyParser = require("body-parser");
+const Setting = require('./models/SettingSchema');
+const app = express();
+bodyParser = require("body-parser");
 port = 3088;
 
 app.use(cors());
@@ -76,6 +76,30 @@ app.delete('/api/pair', (req, res) => {
                 res.json({ 'message':'pair has been deleted','success':true});
             }
         });
+});
+
+app.post('/api/setting', async (req, res) => {
+    try {
+        const { key, value } = req.body;
+        await Setting.deleteMany({ key });
+        const newSetting = new Setting({ key, value });
+        const savedSetting = await newSetting.save();
+        res.json({ message: 'Setting added', success: true, data: savedSetting });
+    } catch (err) {
+        res.json({ message: 'Error: ' + err, success: false });
+        console.log(err);
+    }
+});
+
+app.get('/api/setting/all', (req, res) => {
+    Setting.find({}).exec((err, settings) => {
+        if (err) {
+            res.json({ message: 'Error: ' + err, success: false });
+            console.log(err);
+        } else {
+            res.json({ success: true, data: settings });
+        }
+    });
 });
 
 app.get('/', (req,res) => {
