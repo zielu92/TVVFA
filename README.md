@@ -6,7 +6,8 @@ I want to extend this dashboard by adding few features:
 - [x] Create settings to set pairs
 - [x] Store setting using redis or mongoDB
 - [ ] Forecasts based on SVM or LSTM or ARIMA/SARIMA price prediction
-- [ ] Add alerts/notification 
+- [x] Add alerts/notification 
+- [ ] notification 
 
 ## How it works
 The dashboard will sort pairs depend on the score. Scores are calculated by checking difference between buys and sells, then the highest scored pair should be displayed as first.
