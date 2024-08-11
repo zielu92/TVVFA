@@ -6,6 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     indexes: [],
+    sound: false,
+    rankSound: 10,
   },
   mutations: {
     updateRank(state,payload) {
@@ -52,6 +54,14 @@ export default new Vuex.Store({
       );
       const responseData = await response.json();
       state.indexes.push(...responseData);
+    },
+
+    saveSoundSetting(state) {
+      state.sound = !state.sound;
+    },
+
+    setRankSound(state, rank) {
+      state.rankSound = rank
     }
 
   },
@@ -64,10 +74,22 @@ export default new Vuex.Store({
       context.commit('addPairToTheList', pair)
       context.commit('addPairToAPI', pair)
     },
+    toggleSound(context) {
+      context.commit('saveSoundSetting');
+    },
+    setRankSound(context, rank) {
+      context.commit('setRankSound', rank)
+    }
   },
   getters: {
     getIndexes(state) {
       return state.indexes;
+    },
+    getSoundSetting(state) {
+      return state.sound
+    },
+    getRankSound(state) {
+      return state.rankSound
     }
   },
   modules: {

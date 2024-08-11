@@ -157,19 +157,14 @@ export default {
   },
   methods: {
     setClass(val) {
-      let newClass = '';
-      if(val==='STRONG_BUY') {
-        newClass = 'green darken-4';
-      } else if(val==='BUY') {
-        newClass = 'green';
-      } else if(val==='SELL') {
-        newClass = 'red';
-      } else if(val==='STRONG_SELL') {
-        newClass = 'red darken-4';
-      } else if(val==='NEUTRAL') {
-        newClass = 'grey darken-2';
-      }
-      return newClass;
+      const classMap = {
+        'STRONG_BUY': 'green darken-4',
+        'BUY': 'green',
+        'SELL': 'red',
+        'STRONG_SELL': 'red darken-4',
+        'NEUTRAL': 'grey darken-2'
+      };
+      return classMap[val] || '';
     },
     async fetchData() {
       this.polling = setInterval(async () => {
@@ -178,27 +173,37 @@ export default {
     },
     async getData() {
       const response = await fetch(
-          `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}`,
-          {
-            method: 'GET',
-          }
+        `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}`,
+        {
+          method: 'GET',
+        }
       );
-      // console.log(response);
       const responseData = await response.json();
       if (!response.ok) {
         throw new Error(response.message || "failed to fetch!");
       }
       let result = responseData.result;
       this.summary = result['summary'];
-      if(this.pairName) {
-      let rank =  result['summary']['SELL'] > result['summary']['BUY'] ? result['summary']['SELL'] : result['summary']['BUY'];
-        this.$store.commit('updateRank', {'pair':this.pairName, 'rank':rank});
+      
+      if (this.pairName) {
+        let rank = result['summary']['SELL'] > result['summary']['BUY'] ? result['summary']['SELL'] : result['summary']['BUY'];
+        this.$store.commit('updateRank', {'pair': this.pairName, 'rank': rank});
         this.$emit('update');
+        if (rank == this.$store.getters.getRankSound) {
+          this.playAlertSound();
+        }
       }
+      
       this.oscillators = result['oscillators'];
       this.ma = result['moving_averages'];
       this.indicators = result['indicators'];
       this.time = result['time'];
+    },
+    playAlertSound() {
+      if(this.$store.getters.getSoundSetting) {
+        const audio = new Audio(require('@/assets/alert.mp3'));
+        audio.play();
+      }
     },
   },
   beforeMount() {

@@ -1,62 +1,40 @@
 <template>
   <v-row justify="center">
-    <v-dialog
-        v-model="dialog"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
-    >
+    <v-btn :color="soundButtonColor" dark @click="setSound">
+      <span class="mr-2"></span>
+      <v-icon> {{ soundEnabled ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+    </v-btn>
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn
-            color="secondary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-        >
+        <v-btn color="secondary" dark v-bind="attrs" v-on="on">
           <span class="mr-2">Settings</span>
           <v-icon>mdi-wrench</v-icon>
         </v-btn>
       </template>
       <v-card>
-        <v-toolbar
-            dark
-            color="primary"
-        >
-          <v-btn
-              icon
-              dark
-              @click="dialog = false"
-          >
+        <v-toolbar dark color="primary">
+          <v-btn icon dark @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>Settings</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn
-                dark
-                text
-                @click="dialog = false"
-            >
+            <v-btn dark text @click="saveSettings">
               Save
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-row class="mt-1">
-          <v-col cols="12" md="6" >
+          <v-col cols="12" md="6">
             <h2 class="ml-2">Pairs</h2>
           </v-col>
-          <v-col cols="12" md="6" >
-            <v-btn
-                color="primary"
-                dark
-                class="float-right mr-6"
-                @click="addPair = !addPair"
-            >
+          <v-col cols="12" md="6">
+            <v-btn color="primary" dark class="float-right mr-6" @click="addPair = !addPair">
               <span class="mr-2">Add new pair</span>
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </v-col>
-          <v-col cols="12" md="12"  v-if="addPair">
+          <v-col cols="12" md="12" v-if="addPair">
             <add-new-pair></add-new-pair>
           </v-col>
           <v-col cols="12" md="12">
@@ -65,29 +43,17 @@
         </v-row>
 
         <v-divider></v-divider>
-        <v-list
-            three-line
-            subheader
-        >
+        <v-list three-line subheader>
           <v-subheader>General</v-subheader>
-          <v-list-item>
-            <v-list-item-action>
-              <v-checkbox v-model="notifications"></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Notifications</v-list-item-title>
-              <v-list-item-subtitle>Notify me in future </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-action>
-              <v-checkbox v-model="sound"></v-checkbox>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>Sound</v-list-item-title>
-              <v-list-item-subtitle>future feature</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          <v-row>
+          <v-col cols="4" class="pl-7">
+          <v-text-field v-model="rankNumber" label="Play sound notification if rank is equal (for buy or sell) number:"
+            type="number" :rules="numberRules" min="1" max="15" required></v-text-field>
+          </v-col>
+          <v-col cols="1" class="pt-7">
+            <v-btn :color="soundButtonColor" dark @click="playAlertSound">Test sound notification</v-btn>
+          </v-col>
+        </v-row>
         </v-list>
       </v-card>
     </v-dialog>
@@ -100,13 +66,42 @@ import AddNewPair from './AddNewPair';
 
 export default {
   name: "SettingsDialog",
-  components: {PairsList,AddNewPair},
-  data () {
+  components: { PairsList, AddNewPair },
+  data() {
     return {
       addPair: false,
       dialog: false,
       notifications: false,
-      sound: true,
+      rankNumber: this.$store.getters.getRankSound
+    }
+  },
+  methods: {
+    setSound() {
+      this.$store.dispatch('toggleSound');
+    },
+    playAlertSound() {
+      const audio = new Audio(require('@/assets/alert.mp3'));
+      audio.play().catch(() => {
+        alert('Unable to play sound. Please enable sound permissions.');
+      });
+    },
+    saveSettings() {
+      this.$store.dispatch('setRankSound', this.rankNumber);
+      this.dialog = false; 
+    }
+  },
+  computed: {
+    soundEnabled() {
+      return this.$store.getters.getSoundSetting;
+    },
+    soundButtonColor() {
+      return this.soundEnabled ? 'primary' : 'red darken-1';
+    },
+    numberRules() {
+      return [
+        v => !!v || 'Number is required',
+        v => (v >= 1 && v <= 15) || 'Number must be between 1 and 15',
+      ];
     }
   },
 }

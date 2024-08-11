@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var router = express.Router();
 var PairSchema = require('./models/PairSchema');
 var cors = require('cors');
+const SettingSchema = require('./models/SettingSchema');
 const app = express(),
     bodyParser = require("body-parser");
 port = 3088;
