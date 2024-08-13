@@ -1,7 +1,7 @@
 <template>
   <v-row class="mt-2">
     <v-col cols="12">
-      <index-details v-for="idx in indexes" :key="idx.pair" :pair="idx" @update="sortIndexes">
+      <index-details v-for="idx in indexes" :key="idx._id" :pair="idx" @update="sortIndexes">
       </index-details>
     </v-col>
   </v-row>

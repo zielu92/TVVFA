@@ -95,6 +95,12 @@
     </v-col>
     <v-row no-gutters>
       <v-col cols="12" class="ma-4">
+        <v-chip
+            color="white"
+            outlined
+            pill
+            class="mt-1 ml-2"
+        >{{rank}}</v-chip>
         <v-tooltip
             v-model="show"
             bottom
@@ -151,8 +157,8 @@ export default {
       ma: null,
       indicators: null,
       time: null,
-      polling: null
-
+      polling: null,
+      rank: 0
     }
   },
   methods: {
@@ -173,7 +179,7 @@ export default {
     },
     async getData() {
       const response = await fetch(
-        `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}`,
+        `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}&include_volume=true`,
         {
           method: 'GET',
         }
@@ -186,10 +192,10 @@ export default {
       this.summary = result['summary'];
       
       if (this.pairName) {
-        let rank = result['summary']['SELL'] > result['summary']['BUY'] ? result['summary']['SELL'] : result['summary']['BUY'];
-        this.$store.commit('updateRank', {'pair': this.pairName, 'rank': rank});
+        this.rank = result['summary']['SELL'] > result['summary']['BUY'] ? result['summary']['SELL'] : result['summary']['BUY'];
+        this.$store.commit('updateRank', {'pair': this.pairName, 'rank': this.rank});
         this.$emit('update');
-        if (rank == this.$store.getters.getRankSound) {
+        if (this.rank == this.$store.getters.getRankSound) {
           this.playAlertSound();
         }
       }

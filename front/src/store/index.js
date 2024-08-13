@@ -7,13 +7,16 @@ export default new Vuex.Store({
   state: {
     indexes: [],
     sound: false,
-    rankSound: 10,
+    rankSound: 15,
   },
   mutations: {
-    updateRank(state,payload) {
+    updateRank(state, payload) {
       const existsAtIndex = state.indexes.findIndex(u => u.pair === payload.pair)
       if (existsAtIndex !== -1) {
-        state.indexes[existsAtIndex].rank = payload.rank;
+        Vue.set(state.indexes, existsAtIndex, {
+          ...state.indexes[existsAtIndex],
+          rank: payload.rank
+        });
       }
     },
     addPairToTheList(state,pair) {
@@ -71,13 +74,12 @@ export default new Vuex.Store({
                   state.sound = setting.value === 'true'; 
               }
               if (setting.key === 'rankSound') {
-                  state.rankSound = parseInt(setting.value, 10);  
+                  state.rankSound = parseInt(setting.value, 15);  
               }
           });
       }
     },
 
-    
     saveSoundSetting(state) {
       state.sound = !state.sound;
       fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/setting`, {

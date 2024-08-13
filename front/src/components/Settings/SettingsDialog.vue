@@ -48,7 +48,7 @@
           <v-row>
           <v-col cols="4" class="pl-7">
           <v-text-field v-model="rankNumber" label="Play sound notification if rank is equal (for buy or sell) number:"
-            type="number" :rules="numberRules" min="1" max="15" required></v-text-field>
+            type="number" :rules="numberRules" min="1" max="30" required></v-text-field>
           </v-col>
           <v-col cols="1" class="pt-7">
             <v-btn :color="soundButtonColor" dark @click="playAlertSound">Test sound notification</v-btn>
@@ -108,7 +108,7 @@ export default {
     numberRules() {
       return [
         v => !!v || 'Number is required',
-        v => (v >= 1 && v <= 15) || 'Number must be between 1 and 15',
+        v => (v >= 1 && v <= 30) || 'Number must be between 1 and 15',
       ];
     }
   },
