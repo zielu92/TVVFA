@@ -179,7 +179,7 @@ export default {
     },
     async getData() {
       const response = await fetch(
-        `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}&include_volume=true`,
+        `${process.env.VUE_APP_TV_ENDPOINT}/?symbol=${this.pairName}&screener=${this.pair.screener}&exchange=${this.pair.exchange}&interval=${this.pair.interval}`,
         {
           method: 'GET',
         }

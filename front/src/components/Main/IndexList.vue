@@ -1,8 +1,7 @@
 <template>
   <v-row class="mt-2">
     <v-col cols="12">
-      <index-details v-for="idx in indexes" :key="idx._id" :pair="idx" @update="sortIndexes">
-      </index-details>
+      <index-details v-for="idx in sortedIndexes" :key="idx._id" :pair="idx" />
     </v-col>
   </v-row>
 </template>
@@ -12,23 +11,17 @@ import IndexDetails from "./IndexDetails";
 
 export default {
   name: "IndexList",
-  components: {IndexDetails},
-  data()  {
-    return {
-      indexes: [],
-      indexDetails: [],
-      polling: null
+  components: { IndexDetails },
+  computed: {
+    indexes() {
+      return this.$store.getters.getIndexes;
+    },
+    sortedIndexes() {
+      return [...this.indexes].sort((a, b) => b.rank - a.rank);
     }
   },
   methods: {
-    sortIndexes(){
-      this.indexes.sort((a, b) => b.rank - a.rank );
-    }
-  },
-  created() {
-    this.indexes = this.$store.getters.getIndexes;
   }
-
 }
 </script>
 
