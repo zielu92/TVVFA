@@ -2,8 +2,8 @@
   <v-list two-line>
     <v-list-item-group
     >
-      <template v-for="(item, index) in pairs">
-        <v-list-item :key="item.pair">
+      <template v-for="(item, index) in pairs" >
+        <v-list-item :key="item.pair" >
 
             <v-list-item-content>
               <v-list-item-title v-text="item.pair"></v-list-item-title>

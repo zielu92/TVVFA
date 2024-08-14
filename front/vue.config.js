@@ -2,7 +2,13 @@ module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
-  // devServer: {
-  //   proxy: 'http://back-tv:8888',
-  // }
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://back-api:3088', 
+        changeOrigin: true,
+        ws: true, 
+      },
+    },
+  },
 }

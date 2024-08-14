@@ -8,8 +8,12 @@ export default new Vuex.Store({
     indexes: [],
     sound: false,
     rankSound: 15,
+    loading: true,
   },
   mutations: {
+    setLoading(state, payload) {
+      state.loading = payload;
+    },
     updateRank(state, payload) {
       const existsAtIndex = state.indexes.findIndex(u => u.pair === payload.pair)
       if (existsAtIndex !== -1) {
@@ -49,17 +53,19 @@ export default new Vuex.Store({
 
     async initApi(state) {
       console.log("init...")
-      //pairs
+      state.loading = true; 
+
+      // Pairs
       const response = await fetch(
-          `${process.env.VUE_APP_API_ENDPOINT}/api/pairs`,
-          {
-            method: 'GET',
-          }
+        `${process.env.VUE_APP_API_ENDPOINT}/api/pairs`,
+        {
+          method: 'GET',
+        }
       );
       const responseData = await response.json();
       state.indexes.push(...responseData);
 
-      //settings 
+      // Settings
       const getSettings = await fetch(
         `${process.env.VUE_APP_API_ENDPOINT}/api/setting/all`,
         {
@@ -68,16 +74,22 @@ export default new Vuex.Store({
       );
       const responseSettingsData = await getSettings.json();
       if (responseSettingsData.success) {
-          const settings = responseSettingsData.data;
-          settings.forEach(setting => {
-              if (setting.key === 'sound') {
-                  state.sound = setting.value === 'true'; 
-              }
-              if (setting.key === 'rankSound') {
-                  state.rankSound = parseInt(setting.value, 15);  
-              }
-          });
+        const settings = responseSettingsData.data;
+        settings.forEach(setting => {
+          if (setting.key === 'sound') {
+            state.sound = setting.value === 'true'; 
+          }
+          if (setting.key === 'rankSound') {
+            state.rankSound = parseInt(setting.value, 10); 
+          }
+        });
       }
+
+      state.loading = false; 
+    },
+
+    created() {
+      this.$store.commit('initApi');
     },
 
     saveSoundSetting(state) {
@@ -100,6 +112,9 @@ export default new Vuex.Store({
 
   },
   actions: {
+    async initialize({ commit }) {
+      await commit('initApi');
+    },
     removePair(context,id) {
       context.commit('removePairFromList', id)
       context.commit('removePairFromAPI', id)
@@ -120,11 +135,14 @@ export default new Vuex.Store({
       return state.indexes;
     },
     getSoundSetting(state) {
-      return state.sound
+      return state.sound;
     },
     getRankSound(state) {
-      return state.rankSound
-    }
+      return state.rankSound;
+    },
+    isLoading(state) {
+      return state.loading;
+    },
   },
   modules: {
   }

@@ -10,7 +10,12 @@ const app = express();
 bodyParser = require("body-parser");
 port = 3088;
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:8080', 'http://vue-ui:8080'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'], 
+    credentials: true, 
+}));
 
 var query = 'mongodb://root:6nGDVJsEr69A6Len'
     + '@mongodb:27017/tvvf?'

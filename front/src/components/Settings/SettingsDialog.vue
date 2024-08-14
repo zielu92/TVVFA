@@ -1,10 +1,10 @@
 <template>
   <v-row justify="center">
-    <v-btn :color="soundButtonColor" dark @click="setSound">
+    <v-btn :color="soundButtonColor" dark @click="setSound" :disabled="isLoading">
       <span class="mr-2"></span>
       <v-icon> {{ soundEnabled ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
     </v-btn>
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition" :disabled="isLoading">
       <template v-slot:activator="{ on, attrs }">
         <v-btn color="secondary" dark v-bind="attrs" v-on="on">
           <span class="mr-2">Settings</span>
@@ -46,14 +46,14 @@
         <v-list three-line subheader>
           <v-subheader>General</v-subheader>
           <v-row>
-          <v-col cols="4" class="pl-7">
-          <v-text-field v-model="rankNumber" label="Play sound notification if rank is equal (for buy or sell) number:"
-            type="number" :rules="numberRules" min="1" max="30" required></v-text-field>
-          </v-col>
-          <v-col cols="1" class="pt-7">
-            <v-btn :color="soundButtonColor" dark @click="playAlertSound">Test sound notification</v-btn>
-          </v-col>
-        </v-row>
+            <v-col cols="4" class="pl-7">
+              <v-text-field v-model="localRankNumber" label="Play sound notification if rank is equal (for buy or sell) number:"
+                type="number" :rules="numberRules" min="1" max="30" required></v-text-field>
+            </v-col>
+            <v-col cols="1" class="pt-7">
+              <v-btn :color="soundButtonColor" dark @click="playAlertSound">Test sound notification</v-btn>
+            </v-col>
+          </v-row>
         </v-list>
       </v-card>
     </v-dialog>
@@ -72,16 +72,20 @@ export default {
       addPair: false,
       dialog: false,
       notifications: false,
-      rankNumber: this.$store.getters.getRankSound
-    }
+      localRankNumber: null,
+    };
   },
   watch: {
-    '$store.getters.getRankSound': function(newRankSound) {
-      this.rankNumber = newRankSound;
-    }
+    isLoading(newVal) {
+      if (!newVal) {
+        this.localRankNumber = this.$store.getters.getRankSound;
+      }
+    },
   },
-  created() {
-    this.rankNumber = this.$store.getters.getRankSound;
+  mounted() {
+    if (!this.isLoading) {
+      this.localRankNumber = this.$store.getters.getRankSound;
+    }
   },
   methods: {
     setSound() {
@@ -94,11 +98,16 @@ export default {
       });
     },
     saveSettings() {
-      this.$store.dispatch('setRankSound', this.rankNumber);
-      this.dialog = false; 
-    }
+      if (this.localRankNumber !== this.$store.getters.getRankSound) {
+        this.$store.dispatch('setRankSound', this.localRankNumber);
+      }
+      this.dialog = false;
+    },
   },
   computed: {
+    isLoading() {
+      return this.$store.getters.isLoading;
+    },
     soundEnabled() {
       return this.$store.getters.getSoundSetting;
     },
@@ -110,7 +119,7 @@ export default {
         v => !!v || 'Number is required',
         v => (v >= 1 && v <= 30) || 'Number must be between 1 and 15',
       ];
-    }
+    },
   },
 }
 </script>

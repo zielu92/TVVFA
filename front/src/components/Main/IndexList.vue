@@ -19,6 +19,7 @@ export default {
     sortedIndexes() {
       return [...this.indexes].sort((a, b) => b.rank - a.rank);
     }
+    
   },
   methods: {
   }
