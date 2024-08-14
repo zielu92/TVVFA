@@ -54,3 +54,6 @@ fabric.properties
 
 .idea/*
 .idea
+
+front/.env
+./front/.env

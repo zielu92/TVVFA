@@ -91,11 +91,15 @@ export default {
     setSound() {
       this.$store.dispatch('toggleSound');
     },
-    playAlertSound() {
-      const audio = new Audio(require('@/assets/alert.mp3'));
-      audio.play().catch(() => {
-        alert('Unable to play sound. Please enable sound permissions.');
-      });
+    async playAlertSound() {
+      try {
+        const audio = new Audio(require('@/assets/alert.mp3'));
+        await audio.play();
+      } catch (error) {
+        console.error("Unable to play sound:", error);
+        this.$store.dispatch('setSoundSetting', false);
+        alert('Unable to play sound. Sound has been disabled.');
+      }
     },
     saveSettings() {
       if (this.localRankNumber !== this.$store.getters.getRankSound) {

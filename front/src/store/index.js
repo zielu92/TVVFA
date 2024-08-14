@@ -123,12 +123,23 @@ export default new Vuex.Store({
       context.commit('addPairToTheList', pair)
       context.commit('addPairToAPI', pair)
     },
-    toggleSound(context) {
-      context.commit('saveSoundSetting');
+    toggleSound({ commit, state }) {
+      const newSoundState = !state.sound;
+      commit('saveSoundSetting', newSoundState);
+      if (newSoundState) {
+        const audio = new Audio(require('@/assets/alert.mp3'));
+        audio.play().catch(() => {
+          commit('saveSoundSetting', false);
+          alert('Unable to play sound. Sound has been disabled.');
+        });
+      }
     },
     setRankSound(context, rank) {
       context.commit('setRankSound', rank)
-    }
+    },
+    setSoundSetting({ commit }, soundState) {
+      commit('saveSoundSetting', soundState);
+    },
   },
   getters: {
     getIndexes(state) {

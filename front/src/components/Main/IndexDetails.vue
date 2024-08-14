@@ -101,24 +101,35 @@
             pill
             class="mt-1 ml-2"
         >{{rank}}</v-chip>
-        <v-tooltip
-            v-model="show"
-            bottom
-        >
+        
+        <v-dialog v-model="dialog" max-width="500">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-            >
+            <v-btn icon v-bind="attrs" v-on="on" class="mt-1 ml-2">
               <v-icon>mdi-gauge</v-icon>
             </v-btn>
           </template>
-          <span>
-            {{pairName}}:
-            <u v-for="(ind, val) in indicators" :key="val">{{val}}({{ind}}) </u>
-          </span>
-        </v-tooltip>
+          <v-card>
+            <v-card-title>
+              Indicators for {{pairName}}
+            </v-card-title>
+            <v-card-text>
+              <v-list>
+                <v-list-item v-for="(ind, val) in indicators" :key="val">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{val}}: {{ind}}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="dialog = false">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
         <v-chip
             color="white"
             outlined
@@ -158,7 +169,8 @@ export default {
       indicators: null,
       time: null,
       polling: null,
-      rank: 0
+      rank: 0,
+      dialog: false,
     }
   },
   methods: {
