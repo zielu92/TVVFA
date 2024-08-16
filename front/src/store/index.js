@@ -37,7 +37,7 @@ export default new Vuex.Store({
 
     removePairFromList(state,id) {
       var index = state.indexes.map(i => {
-        return i.id;
+        return i._id;
       }).indexOf(id);
       state.indexes.splice(index, 1);
     },
