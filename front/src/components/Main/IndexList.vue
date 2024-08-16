@@ -1,8 +1,8 @@
 <template>
   <v-row class="mt-2">
-    <v-col cols="12">
-      <index-details v-for="idx in sortedIndexes" :key="idx._id" :pair="idx" />
-    </v-col>
+    
+      <index-details :details="details" v-for="idx in sortedIndexes" :key="idx._id" :pair="idx" />
+
   </v-row>
 </template>
 
@@ -11,6 +11,7 @@ import IndexDetails from "./IndexDetails";
 
 export default {
   name: "IndexList",
+  props: ['details'],
   components: { IndexDetails },
   computed: {
     indexes() {

@@ -9,12 +9,18 @@
       </div>
 
       <v-spacer></v-spacer>
+      <v-switch
+      class="pt-6"
+      v-model="detailedLayout"
+      inset
+      :label="`Show details: ${detailedLayout.toString()}`"
+      ></v-switch>
       <settings-dialog></settings-dialog>
     </v-app-bar>
 
     <v-main>
-      <v-container class="">
-        <index-list></index-list>
+      <v-container>
+        <index-list :details="detailedLayout"></index-list>
       </v-container>
     </v-main>
   </v-app>
@@ -28,6 +34,11 @@ export default {
   components: {
     IndexList,
     SettingsDialog
+  },
+  data() {
+    return {
+        detailedLayout: true,
+    }
   },
   beforeMount() {
     this.$store.commit('initApi');

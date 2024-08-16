@@ -9,10 +9,14 @@ export default new Vuex.Store({
     sound: false,
     rankSound: 15,
     loading: true,
+    showDetails: true,
   },
   mutations: {
     setLoading(state, payload) {
       state.loading = payload;
+    },
+    setShowDetails(state, payload) {
+      state.showDetails = payload;
     },
     updateRank(state, payload) {
       const existsAtIndex = state.indexes.findIndex(u => u.pair === payload.pair)
@@ -142,6 +146,9 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    getShowDetails(state) {
+      return state.showDetails;
+    },
     getIndexes(state) {
       return state.indexes;
     },

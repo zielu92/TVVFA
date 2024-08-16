@@ -1,164 +1,137 @@
 <template>
-  <v-row :class="[setClass(summary['RECOMMENDATION']), 'rounded-lg', 'mb-2']" v-if="summary">
-    <v-col
-        cols="1"
-    >
-     <v-avatar
-         color="primary"
-         size="90"
-     >
-       <span class="white--text"> {{pairName}}</span>
-     </v-avatar>
-    </v-col>
-    <v-col
-        cols="3"
-    >
-      <v-row no-gutters :class="[setClass(summary['RECOMMENDATION']), 'rounded-lg', 'pl-1']">
-        <v-col cols="12">
-          <b>Summary:</b> {{ summary['RECOMMENDATION'] }}
-        </v-col>
-        <v-col cols="12">
-          BUY {{summary['BUY']}}
-        </v-col>
-        <v-col cols="12">
-          SELL {{summary['SELL']}}
-        </v-col>
-        <v-col cols="12">
-          NEUTRAL {{summary['NEUTRAL']}}
-        </v-col>
-      </v-row>
-    </v-col>
-    <v-col
-        cols="3"
-    >
-      <v-row no-gutters :class="[setClass(oscillators['RECOMMENDATION']), 'rounded-lg', 'pl-1']">
-        <v-col cols="12">
-          <b>Oscillators:</b> {{ oscillators['RECOMMENDATION'] }}
-        </v-col>
-        <v-col cols="12">
-
-        </v-col>
-        <v-col cols="12">
-          BUY {{oscillators['BUY']}}
-        </v-col>
-        <v-col cols="12">
-          SELL {{oscillators['SELL']}}
-        </v-col>
-        <v-col cols="12">
-          NEUTRAL {{oscillators['NEUTRAL']}}
-        </v-col>
-
-      </v-row>
-    </v-col>
-    <v-col
-        cols="3"
-    >
-      <v-row no-gutters :class="[setClass(ma['RECOMMENDATION']), 'rounded-lg', 'pl-1']">
-        <v-col cols="12">
-          <b>MA:</b> {{ ma['RECOMMENDATION'] }}
-        </v-col>
-        <v-col cols="12">
-
-        </v-col>
-        <v-col cols="12">
-          BUY {{ma['BUY']}}
-        </v-col>
-        <v-col cols="12">
-          SELL {{ma['SELL']}}
-        </v-col>
-        <v-col cols="12">
-          NEUTRAL {{ma['NEUTRAL']}}
-        </v-col>
-      </v-row>
-    </v-col>
-
-    <v-col
-        cols="2"
-    >
-      <v-row no-gutters class="black rounded-lg pl-1">
-        <v-col cols="12">
-          <b>Forecast:</b>
-        </v-col>
-        <v-col cols="12">
-
-        </v-col>
-        <v-col cols="12">
-          LOW: XXX
-        </v-col>
-        <v-col cols="12">
-          HIGH: XXX
-        </v-col>
-        <v-col cols="12">
-          Confidence: 0.XX
-        </v-col>
-      </v-row>
-    </v-col>
-    <v-row no-gutters>
-      <v-col cols="12" class="ma-4">
-        <v-chip
-            color="white"
-            outlined
-            pill
-            class="mt-1 ml-2"
-        >{{rank}}</v-chip>
-        
-        <v-dialog v-model="dialog" max-width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" class="mt-1 ml-2">
-              <v-icon>mdi-gauge</v-icon>
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              Indicators for {{pairName}}
-            </v-card-title>
-            <v-card-text>
-              <v-list>
-                <v-list-item v-for="(ind, val) in indicators" :key="val">
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{val}}: {{ind}}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="dialog = false">Close</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <v-chip
-            color="white"
-            outlined
-            pill
-            class="mt-1 ml-2"
-        >{{time}}</v-chip>
-        <v-chip
-            color="white"
-            outlined
-            pill
-            class="mt-1 ml-2"
-        >{{pair.interval}}</v-chip>
-        <v-chip
-            color="white"
-            outlined
-            pill
-            class="mt-1 ml-2"
-        >VP: XX</v-chip>
-
+  <v-col :cols="details ? '12' : '4'" class="pl-6">
+    <v-row :class="[setClass(summary['RECOMMENDATION']), 'rounded-lg', 'mb-2']" v-if="summary">
+      <v-col
+          :cols="details ? '2' : '4'"
+      >
+      <v-avatar
+          color="primary"
+          size="90"
+      >
+        <span class="white--text"> {{pairName}}</span>
+      </v-avatar>
       </v-col>
-    </v-row>
-  </v-row>
+      <v-col
+          :cols="details ? '3' : '8'"
+      >
+        <v-row no-gutters :class="[setClass(summary['RECOMMENDATION']), 'rounded-lg', 'pl-1']">
+          <v-col cols="12">
+            <b>Summary:</b> {{ summary['RECOMMENDATION'] }}
+          </v-col>
+          <v-col cols="12">
+            BUY {{summary['BUY']}}
+          </v-col>
+          <v-col cols="12">
+            SELL {{summary['SELL']}}
+          </v-col>
+          <v-col cols="12">
+            NEUTRAL {{summary['NEUTRAL']}}
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col v-if="details"
+          cols="3"
+      >
+        <v-row no-gutters :class="[setClass(oscillators['RECOMMENDATION']), 'rounded-lg', 'pl-1']">
+          <v-col cols="12">
+            <b>Oscillators:</b> {{ oscillators['RECOMMENDATION'] }}
+          </v-col>
+          <v-col cols="12">
 
+          </v-col>
+          <v-col cols="12">
+            BUY {{oscillators['BUY']}}
+          </v-col>
+          <v-col cols="12">
+            SELL {{oscillators['SELL']}}
+          </v-col>
+          <v-col cols="12">
+            NEUTRAL {{oscillators['NEUTRAL']}}
+          </v-col>
+
+        </v-row>
+      </v-col>
+      <v-col v-if="details"
+          cols="3"
+      >
+        <v-row no-gutters  :class="[setClass(ma['RECOMMENDATION']), 'rounded-lg', 'pl-1']">
+          <v-col cols="12">
+            <b>MA:</b> {{ ma['RECOMMENDATION'] }}
+          </v-col>
+          <v-col cols="12">
+
+          </v-col>
+          <v-col cols="12">
+            BUY {{ma['BUY']}}
+          </v-col>
+          <v-col cols="12">
+            SELL {{ma['SELL']}}
+          </v-col>
+          <v-col cols="12">
+            NEUTRAL {{ma['NEUTRAL']}}
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-row no-gutters>
+        <v-col cols="12" class="ma-4">
+          <v-chip
+              color="white"
+              outlined
+              pill
+              class="mt-1 ml-2"
+          >{{rank}}</v-chip>
+          
+          <v-dialog v-model="dialog" max-width="500">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on" class="mt-1 ml-2">
+                <v-icon>mdi-gauge</v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                Indicators for {{pairName}}
+              </v-card-title>
+              <v-card-text>
+                <v-list>
+                  <v-list-item v-for="(ind, val) in indicators" :key="val">
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{val}}: {{ind}}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="dialog = false">Close</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <v-chip
+              color="white"
+              outlined
+              pill
+              class="mt-1 ml-2"
+          >{{formattedDate}}</v-chip>
+          <v-chip
+              color="white"
+              outlined
+              pill
+              class="mt-1 ml-2"
+          >{{pair.interval}}</v-chip>
+        </v-col>
+      </v-row>
+    </v-row>
+  </v-col>
 </template>
 
 <script>
 export default {
   name: "IndexDetails",
-  props: ['pair'],
+  props: ['pair', 'details'],
   data() {
     return {
       pairName: this.pair.pair,
@@ -221,6 +194,19 @@ export default {
         const audio = new Audio(require('@/assets/alert.mp3'));
         audio.play();
       }
+    },
+  },
+  computed: {
+    formattedDate() {
+      const date = new Date(this.time);
+      return date.toLocaleString('de', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }).replace(",", ""); 
     },
   },
   beforeMount() {
