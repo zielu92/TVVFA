@@ -48,10 +48,16 @@
           <v-row>
             <v-col cols="4" class="pl-7">
               <v-text-field v-model="localRankNumber" label="Play sound notification if rank is equal (for buy or sell) number:"
-                type="number" :rules="numberRules" min="1" max="30" required></v-text-field>
+                type="number" :rules="numberRulesForSound" min="1" max="30" required></v-text-field>
             </v-col>
             <v-col cols="1" class="pt-7">
               <v-btn :color="soundButtonColor" dark @click="playAlertSound">Test sound notification</v-btn>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="4" class="pl-7">
+              <v-text-field v-model="fetchTimeNumber" label="How often fetch stats in seconds:"
+                type="number" :rules="numberRulesForFetch" min="20" required></v-text-field>
             </v-col>
           </v-row>
         </v-list>
@@ -73,18 +79,21 @@ export default {
       dialog: false,
       notifications: false,
       localRankNumber: null,
+      fetchTimeNumber: null,
     };
   },
   watch: {
     isLoading(newVal) {
       if (!newVal) {
         this.localRankNumber = this.$store.getters.getRankSound;
+        this.fetchTimeNumber = this.$store.getters.getFetchTime;
       }
     },
   },
   mounted() {
     if (!this.isLoading) {
       this.localRankNumber = this.$store.getters.getRankSound;
+      this.fetchTimeNumber = this.$store.getters.getFetchTime;
     }
   },
   methods: {
@@ -105,6 +114,9 @@ export default {
       if (this.localRankNumber !== this.$store.getters.getRankSound) {
         this.$store.dispatch('setRankSound', this.localRankNumber);
       }
+      if (this.fetchTimeNumber !== this.$store.getters.getFetchTime) {
+        this.$store.dispatch('setFetchTime', this.fetchTimeNumber);
+      }
       this.dialog = false;
     },
   },
@@ -118,10 +130,16 @@ export default {
     soundButtonColor() {
       return this.soundEnabled ? 'primary' : 'red darken-1';
     },
-    numberRules() {
+    numberRulesForSound() {
       return [
         v => !!v || 'Number is required',
-        v => (v >= 1 && v <= 30) || 'Number must be between 1 and 15',
+        v => (v >= 1 && v <= 30) || 'Number must be between 1 and 30',
+      ];
+    },
+    numberRulesForFetch() {
+      return [
+        v => !!v || 'Number is required',
+        v => (v >= 20) || 'Number must be at least 20',
       ];
     },
   },

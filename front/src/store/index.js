@@ -8,6 +8,7 @@ export default new Vuex.Store({
     indexes: [],
     sound: false,
     rankSound: 15,
+    fetchTime: 40,
     loading: true,
     showDetails: true,
   },
@@ -86,6 +87,9 @@ export default new Vuex.Store({
           if (setting.key === 'rankSound') {
             state.rankSound = parseInt(setting.value, 10); 
           }
+          if (setting.key === 'fetchTime') {
+            state.fetchTime = parseInt(setting.value, 10);
+          }
         });
       }
 
@@ -112,8 +116,16 @@ export default new Vuex.Store({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: 'rankSound', value: rank }),
       });
-    }
+    },
 
+    setFetchTime(state, time) {
+      state.fetchTime = time;
+      fetch(`${process.env.VUE_APP_API_ENDPOINT}/api/setting`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: 'fetchTime', value: time }),
+      });
+  }
   },
   actions: {
     async initialize({ commit }) {
@@ -141,6 +153,11 @@ export default new Vuex.Store({
     setRankSound(context, rank) {
       context.commit('setRankSound', rank)
     },
+
+    setFetchTime(context, time) {
+      context.commit('setFetchTime', time)
+    },
+
     setSoundSetting({ commit }, soundState) {
       commit('saveSoundSetting', soundState);
     },
@@ -157,6 +174,9 @@ export default new Vuex.Store({
     },
     getRankSound(state) {
       return state.rankSound;
+    },
+    getFetchTime(state) {
+      return state.fetchTime;
     },
     isLoading(state) {
       return state.loading;
