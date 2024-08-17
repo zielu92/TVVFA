@@ -13,7 +13,7 @@
       class="pt-6"
       v-model="detailedLayout"
       inset
-      :label="`Show details: ${detailedLayout.toString()}`"
+      :label="`display details: ${detailedLayout.toString()}`"
       ></v-switch>
       <settings-dialog></settings-dialog>
     </v-app-bar>

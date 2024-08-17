@@ -1,8 +1,6 @@
 <template>
   <v-row class="mt-2">
-    
-      <index-details :details="details" v-for="idx in sortedIndexes" :key="idx._id" :pair="idx" />
-
+    <index-details :details="details" v-for="idx in sortedIndexes" :key="idx._id" :pair="idx" />
   </v-row>
 </template>
 
