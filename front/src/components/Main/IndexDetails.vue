@@ -111,7 +111,7 @@ export default {
     async fetchData() {
       const fetchTime = this.$store.getters.getFetchTime;
       this.polling = setInterval(this.getData, fetchTime * 1000);
-      this.getData();rval
+      this.getData();
     },
     async getData() {
       const response = await fetch(
@@ -129,7 +129,7 @@ export default {
       if (this.pairName) {
         this.rank = result['summary']['SELL'] > result['summary']['BUY'] ? result['summary']['SELL'] : result['summary']['BUY'];
         this.$store.commit('updateRank', { 'pair': this.pairName, 'rank': this.rank });
-        if (this.rank === this.$store.getters.getRankSound) {
+        if (this.rank >= this.$store.getters.getRankSound) {
           this.playAlertSound();
         }
       }
